@@ -18,3 +18,4 @@ lib/Arduino-PID-Library-master/examples/PID_AdaptiveTunings/PID_AdaptiveTunings.
 lib/Arduino-PID-Library-master/examples/PID_PonM/PID_PonM.ino
 lib/Arduino-PID-Library-master/examples/PID_RelayOutput/PID_RelayOutput.ino
 test/README
+.vscode/settings.json
