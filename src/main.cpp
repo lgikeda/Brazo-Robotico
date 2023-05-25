@@ -56,6 +56,7 @@ unsigned long intervalo = 20;
 bool flag = false;
 bool flag1 = false;
 bool flag2 = false;
+bool flag3 = false;
 
 double thetaAnterior[3];
 
@@ -78,6 +79,7 @@ void establecerSetpoint();
 void inversa(int px, int py);
 void movimiento();
 void handleTerminalInput();
+void manual(int a, int b, int c, int d);
 
 String mensaje;
 
@@ -85,6 +87,10 @@ BLYNK_WRITE(V1)
 {
   mensaje = param.asStr();
   flag = true;
+  if (mensaje == "m")
+    flag3 = true;
+  if (mensaje == "a")
+    flag3 = false;
   // Envia una respuesta al terminal
 }
 
@@ -293,12 +299,25 @@ void handleTerminalInput()
       {
         // Coordinates input
         int commaIndex = input.indexOf(',');
+        int secondCommaIndex = input.indexOf(",", commaIndex + 1);
+        int thirdCommaIndex = input.indexOf(",", secondCommaIndex + 1);
         String xStr = input.substring(0, commaIndex);
-        String yStr = input.substring(commaIndex + 1);
+        String yStr = input.substring(commaIndex + 1, secondCommaIndex);
+        String zStr = input.substring(secondCommaIndex + 1, thirdCommaIndex);
+        String qStr = input.substring(thirdCommaIndex + 1);
         int x = xStr.toInt();
         int y = yStr.toInt();
+        int z = zStr.toInt();
+        int q = qStr.toInt();
         Blynk.virtualWrite(V1, "Punto final: " + String(x) + ";" + String(y));
-        inversa(x, y);
+        if (flag3)
+        {
+          manual(x, y, z, q);
+        }
+        else
+        {
+          inversa(x, y);
+        }
       } // else {
       //   // Servo angles input
       //   String anglesStr = input;
@@ -316,4 +335,14 @@ void handleTerminalInput()
       // }
     }
   }
+}
+
+void manual(int a, int b, int c, int d)
+{
+  theta1 = a;
+  theta2 = b;
+  theta3 = c;
+  theta4 = d;
+  movimiento();
+  control();
 }
